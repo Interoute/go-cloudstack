@@ -63,6 +63,7 @@ type CloudStackClient struct {
 	client  *http.Client // The http client for communicating
 	baseURL string       // The base URL of the API
 	apiKey  string       // Api key
+	VDCRegion string     // VDC Region
 	secret  string       // Secret key
 	async   bool         // Wait for async calls to finish
 	timeout int64        // Max waiting timeout in seconds for async jobs to finish; defaults to 300 seconds
@@ -133,7 +134,7 @@ type CloudStackClient struct {
 }
 
 // Creates a new client for communicating with CloudStack
-func newClient(apiurl string, apikey string, secret string, async bool, verifyssl bool) *CloudStackClient {
+func newClient(apiurl string, apikey string, secret string, async bool, vdcregion string, verifyssl bool) *CloudStackClient {
 	cs := &CloudStackClient{
 		client: &http.Client{
 			Transport: &http.Transport{
@@ -145,6 +146,7 @@ func newClient(apiurl string, apikey string, secret string, async bool, verifyss
 		baseURL: apiurl,
 		apiKey:  apikey,
 		secret:  secret,
+                VDCRegion: vdcregion,
 		async:   async,
 		timeout: 300,
 	}
@@ -217,8 +219,8 @@ func newClient(apiurl string, apikey string, secret string, async bool, verifyss
 // Default non-async client. So for async calls you need to implement and check the async job result yourself. When using
 // HTTPS with a self-signed certificate to connect to your CloudStack API, you would probably want to set 'verifyssl' to
 // false so the call ignores the SSL errors/warnings.
-func NewClient(apiurl string, apikey string, secret string, verifyssl bool) *CloudStackClient {
-	cs := newClient(apiurl, apikey, secret, false, verifyssl)
+func NewClient(apiurl string, apikey string, secret string, vdcregion string, verifyssl bool) *CloudStackClient {
+	cs := newClient(apiurl, apikey, secret, false, vdcregion, verifyssl)
 	return cs
 }
 
@@ -226,8 +228,8 @@ func NewClient(apiurl string, apikey string, secret string, verifyssl bool) *Clo
 // this client will wait until the async job is finished or until the configured AsyncTimeout is reached. When the async
 // job finishes successfully it will return actual object received from the API and nil, but when the timout is
 // reached it will return the initial object containing the async job ID for the running job and a warning.
-func NewAsyncClient(apiurl string, apikey string, secret string, verifyssl bool) *CloudStackClient {
-	cs := newClient(apiurl, apikey, secret, true, verifyssl)
+func NewAsyncClient(apiurl string, apikey string, secret string, vdcregion string, verifyssl bool) *CloudStackClient {
+	cs := newClient(apiurl, apikey, secret, true, vdcregion, verifyssl)
 	return cs
 }
 
@@ -398,7 +400,7 @@ func WithProject(project string) OptionFunc {
 		}
 
 		if !IsID(project) {
-			id, _, err := cs.Project.GetProjectID(project)
+			id, err := cs.Project.GetProjectID(project)
 			if err != nil {
 				return err
 			}

@@ -1,6 +1,7 @@
 go-cloudstack
 =============
 A CloudStack API client enabling Go programs to interact with CloudStack in a simple and uniform way
+An extra parameter (Region) was added to support [Interoute VDC](https://cloudstore.interoute.com/account/login)
 
 ## Status
 
@@ -34,9 +35,13 @@ _Please try to see if [GoDocs](http://godoc.org/github.com/xanzy/go-cloudstack) 
 
 * If you have an issue: report it on the [issue tracker](https://github.com/xanzy/go-cloudstack/issues)
 
+## Acknowledgement
+
+[Go-Cloudstack](https://github.com/xanzy/go-cloudstack) Written by [@xanzy](https://github.com/xanzy).
+
 ## Author
 
-Sander van Harmelen (<sander@xanzy.io>)
+Radu Stefanache (https://github.com/radu-stefanache)
 
 ## License
 
