@@ -1,7 +1,8 @@
 go-cloudstack
 =============
 A CloudStack API client enabling Go programs to interact with CloudStack in a simple and uniform way
-An extra parameter (Region) was added to support [Interoute VDC](https://cloudstore.interoute.com/account/login)
+
+An extra parameter (```Region```) was added to support [Interoute VDC](https://cloudstore.interoute.com/account/login)
 
 ## Status
 
