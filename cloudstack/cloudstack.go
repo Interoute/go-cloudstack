@@ -400,7 +400,7 @@ func WithProject(project string) OptionFunc {
 		}
 
 		if !IsID(project) {
-			id, err := cs.Project.GetProjectID(project)
+			id, _, err := cs.Project.GetProjectID(project)
 			if err != nil {
 				return err
 			}
