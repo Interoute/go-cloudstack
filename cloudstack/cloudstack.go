@@ -148,7 +148,7 @@ func newClient(apiurl string, apikey string, secret string, async bool, vdcregio
 		secret:  secret,
                 VDCRegion: vdcregion,
 		async:   async,
-		timeout: 300,
+		timeout: 1800,
 	}
 	cs.APIDiscovery = NewAPIDiscoveryService(cs)
 	cs.Account = NewAccountService(cs)
