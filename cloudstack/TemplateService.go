@@ -1358,7 +1358,7 @@ func (s *TemplateService) GetTemplateByName(name string, templatefilter string, 
 		return nil, count, err
 	}
 
-	r, count, err := s.GetTemplateByID(id, templatefilter, opts...)
+	r, count, err := s.GetTemplateByID(id, templatefilter, zoneid, opts...)
 	if err != nil {
 		return nil, count, err
 	}
@@ -1366,12 +1366,13 @@ func (s *TemplateService) GetTemplateByName(name string, templatefilter string, 
 }
 
 // This is a courtesy helper function, which in some cases may not work as expected!
-func (s *TemplateService) GetTemplateByID(id string, templatefilter string, opts ...OptionFunc) (*Template, int, error) {
+func (s *TemplateService) GetTemplateByID(id string, templatefilter string, zoneid string, opts ...OptionFunc) (*Template, int, error) {
 	p := &ListTemplatesParams{}
 	p.p = make(map[string]interface{})
 
 	p.p["id"] = id
 	p.p["templatefilter"] = templatefilter
+	p.p["zoneid"] = zoneid
 
 	for _, fn := range opts {
 		if err := fn(s.cs, p); err != nil {
