@@ -63,7 +63,7 @@ type CloudStackClient struct {
 	client  *http.Client // The http client for communicating
 	baseURL string       // The base URL of the API
 	apiKey  string       // Api key
-	VDCRegion string     // VDC Region
+	vdcRegion string     // VDC Region
 	secret  string       // Secret key
 	async   bool         // Wait for async calls to finish
 	timeout int64        // Max waiting timeout in seconds for async jobs to finish; defaults to 300 seconds
@@ -134,7 +134,7 @@ type CloudStackClient struct {
 }
 
 // Creates a new client for communicating with CloudStack
-func newClient(apiurl string, apikey string, secret string, async bool, vdcregion string, verifyssl bool) *CloudStackClient {
+func newClient(apiurl string, apikey string, secret string, vdcregion string, async bool, verifyssl bool) *CloudStackClient {
 	cs := &CloudStackClient{
 		client: &http.Client{
 			Transport: &http.Transport{
@@ -145,8 +145,8 @@ func newClient(apiurl string, apikey string, secret string, async bool, vdcregio
 		},
 		baseURL: apiurl,
 		apiKey:  apikey,
+                vdcRegion: vdcregion,
 		secret:  secret,
-                VDCRegion: vdcregion,
 		async:   async,
 		timeout: 1800,
 	}
@@ -220,7 +220,7 @@ func newClient(apiurl string, apikey string, secret string, async bool, vdcregio
 // HTTPS with a self-signed certificate to connect to your CloudStack API, you would probably want to set 'verifyssl' to
 // false so the call ignores the SSL errors/warnings.
 func NewClient(apiurl string, apikey string, secret string, vdcregion string, verifyssl bool) *CloudStackClient {
-	cs := newClient(apiurl, apikey, secret, false, vdcregion, verifyssl)
+	cs := newClient(apiurl, apikey, secret, vdcregion, false, verifyssl)
 	return cs
 }
 
@@ -229,7 +229,7 @@ func NewClient(apiurl string, apikey string, secret string, vdcregion string, ve
 // job finishes successfully it will return actual object received from the API and nil, but when the timout is
 // reached it will return the initial object containing the async job ID for the running job and a warning.
 func NewAsyncClient(apiurl string, apikey string, secret string, vdcregion string, verifyssl bool) *CloudStackClient {
-	cs := newClient(apiurl, apikey, secret, true, vdcregion, verifyssl)
+	cs := newClient(apiurl, apikey, secret, vdcregion, true, verifyssl)
 	return cs
 }
 
@@ -287,6 +287,7 @@ func (cs *CloudStackClient) GetAsyncJobResult(jobid string, timeout int64) (json
 // error details. If a processing (code) error occurs the result will be nil and the generated error
 func (cs *CloudStackClient) newRequest(api string, params url.Values) (json.RawMessage, error) {
 	params.Set("apiKey", cs.apiKey)
+        params.Set("region", cs.vdcRegion)
 	params.Set("command", api)
 	params.Set("response", "json")
 
