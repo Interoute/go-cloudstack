@@ -66,7 +66,7 @@ type CloudStackClient struct {
 	vdcRegion string     // VDC Region
 	secret  string       // Secret key
 	async   bool         // Wait for async calls to finish
-	timeout int64        // Max waiting timeout in seconds for async jobs to finish; defaults to 300 seconds
+	timeout int64        // Max waiting timeout in seconds for async jobs to finish; defaults to 1800 seconds
 
 	APIDiscovery     *APIDiscoveryService
 	Account          *AccountService
@@ -141,7 +141,7 @@ func newClient(apiurl string, apikey string, secret string, vdcregion string, as
 				Proxy:           http.ProxyFromEnvironment,
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: !verifyssl}, // If verifyssl is true, skipping the verify should be false and vice versa
 			},
-			Timeout: time.Duration(60 * time.Second),
+			Timeout: time.Duration(180 * time.Second),
 		},
 		baseURL: apiurl,
 		apiKey:  apikey,
