@@ -98,7 +98,7 @@ func (p *CreateAffinityGroupParams) SetType(v string) {
 	if p.p == nil {
 		p.p = make(map[string]interface{})
 	}
-	p.p["affinityGroupType"] = v
+	p.p["type"] = v
 	return
 }
 
@@ -108,7 +108,7 @@ func (s *AffinityGroupService) NewCreateAffinityGroupParams(name string, affinit
 	p := &CreateAffinityGroupParams{}
 	p.p = make(map[string]interface{})
 	p.p["name"] = name
-	p.p["affinityGroupType"] = affinityGroupType
+	p.p["type"] = affinityGroupType
 	return p
 }
 
@@ -406,7 +406,7 @@ func (p *ListAffinityGroupsParams) SetType(v string) {
 	if p.p == nil {
 		p.p = make(map[string]interface{})
 	}
-	p.p["affinityGroupType"] = v
+	p.p["type"] = v
 	return
 }
 
@@ -443,6 +443,10 @@ func (s *AffinityGroupService) GetAffinityGroupID(name string, opts ...OptionFun
 	if err != nil {
 		return "", -1, err
 	}
+
+	// This is needed because of a bug with the listAffinityGroup call. It reports the
+	// number of VirtualMachines in the groups as being the number of groups found.
+	l.Count = len(l.AffinityGroups)
 
 	if l.Count == 0 {
 		return "", l.Count, fmt.Errorf("No match found for %s: %+v", name, l)
@@ -498,6 +502,10 @@ func (s *AffinityGroupService) GetAffinityGroupByID(id string, opts ...OptionFun
 		}
 		return nil, -1, err
 	}
+
+	// This is needed because of a bug with the listAffinityGroup call. It reports the
+	// number of VirtualMachines in the groups as being the number of groups found.
+	l.Count = len(l.AffinityGroups)
 
 	if l.Count == 0 {
 		return nil, l.Count, fmt.Errorf("No match found for %s: %+v", id, l)
